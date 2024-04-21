@@ -1,4 +1,6 @@
-﻿namespace KnightTourProblemConsole
+﻿using System.Diagnostics;
+
+namespace KnightTourProblemConsole
 {
     internal class Program
     {
@@ -8,7 +10,14 @@
 
             var table = new Table(8);
 
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+
             table.Start();
+
+            stopWatch.Stop();
+
+            Console.WriteLine($"Status: {table.Result}. Time: {stopWatch.Elapsed.TotalSeconds}s");
         }
     }
 }

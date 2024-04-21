@@ -4,27 +4,29 @@ namespace KnightTourProblemConsole
 {
     internal class Table
     {
-        public readonly int n;
-
-        public readonly (int x, int y)[] Historic;
+        public Knight Knight { get; private set; }
 
         public int Turn { get; private set; } = 1;
 
-        public bool[,] Positions { get; set; }
+        public MoveResultEnum Result { get; private set; }
 
-        public Knight Knight { get; private set; }
+        public readonly int n;
+
+        public readonly (int x, int y)?[] Historic;
+
+        public readonly bool[,] Positions;
 
         public Table(int n)
         {
             this.n = n;
             Positions = new bool[this.n, this.n];
-            Historic = new (int, int)[n * n];
+            Historic = new (int, int)?[n * n];
         }
 
         public void Start()
         {
             InitializeKnight();
-            NextMove();
+            Result = NextMove();
         }
 
         public bool AllTraversedPositions()
@@ -36,8 +38,6 @@ namespace KnightTourProblemConsole
 
             return true;
         }
-
-        #region Private
 
         private MoveResultEnum NextMove()
         {
@@ -54,37 +54,44 @@ namespace KnightTourProblemConsole
             {
                 var move = possiblesMoves[i];
                 SetMove(move.x, move.y);
+                Turn++;
 
                 var result = NextMove();
 
                 switch (result)
                 {
                     case MoveResultEnum.Fail:
+                        Turn--;
                         var lastMove = Historic[Turn - 1];
-                        UnsetMove(lastMove.x, lastMove.y);
+                        UnsetMove(lastMove.Value.x, lastMove.Value.y);
                         break;
 
+                    case MoveResultEnum.Sucess:
                     case MoveResultEnum.Complete:
                         return result;
                 }
             }
 
-            return MoveResultEnum.Sucess;
+            return MoveResultEnum.Fail;
+        }
+
+        private (int x, int y)[] AvailableMoves((int x, int y)[] moves)
+        {
+            return moves.Where(move => !Positions[move.x, move.y]).ToArray();
         }
 
         private void UnsetMove(int x, int y)
         {
+            Knight.Set(x, y);
             Positions[x, y] = false;
             Historic[Turn - 1] = default;
-            Turn--;
-
         }
 
         private void SetMove(int x, int y)
         {
+            Knight.Set(x, y);
             Positions[x, y] = true;
             Historic[Turn - 1] = (x, y);
-            Turn++;
         }
 
         private void InitializeKnight()
@@ -101,11 +108,5 @@ namespace KnightTourProblemConsole
             SetMove(0, 0);
         }
 
-        private (int x, int y)[] AvailableMoves((int x, int y)[] moves)
-        {
-            return moves.Where(move => !Positions[move.x, move.y]).ToArray();
-        }
-
-        #endregion
     }
 }
