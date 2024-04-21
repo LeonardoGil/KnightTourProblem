@@ -1,4 +1,5 @@
-﻿using KnightTourProblemApplication.Enums;
+﻿using KnightTourProblemApplication.DTOs;
+using KnightTourProblemApplication.Enums;
 
 namespace KnightTourProblemApplication
 {
@@ -15,6 +16,10 @@ namespace KnightTourProblemApplication
         public readonly (int x, int y)?[] Historic;
 
         public readonly bool[,] Positions;
+
+        public event EventHandler SetCell;
+        
+        public event EventHandler ClearCell;
 
         public Table(int n)
         {
@@ -41,6 +46,8 @@ namespace KnightTourProblemApplication
 
         private MoveResultEnum NextMove()
         {
+            Thread.Sleep(200);
+
             if (AllTraversedPositions())
                 return MoveResultEnum.Complete;
 
@@ -54,6 +61,9 @@ namespace KnightTourProblemApplication
             {
                 var move = possiblesMoves[i];
                 SetMove(move.x, move.y);
+                
+                SetCell?.Invoke(new CellDTO(Turn, move.x, move.y), EventArgs.Empty);
+
                 Turn++;
 
                 var result = NextMove();
@@ -61,6 +71,9 @@ namespace KnightTourProblemApplication
                 switch (result)
                 {
                     case MoveResultEnum.Fail:
+
+                        ClearCell?.Invoke(new CellDTO(Turn, move.x, move.y), EventArgs.Empty);
+
                         Turn--;
                         var lastMove = Historic[Turn - 1];
                         UnsetMove(lastMove.Value.x, lastMove.Value.y);

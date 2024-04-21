@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KnightTourProblemConsole", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KnightTourProblemApplication", "KnightTourProblemApplication\KnightTourProblemApplication.csproj", "{0770D023-8B57-44E9-BE20-BE46C354F506}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KnightTourProblemForms", "KnightTourProblemForms\KnightTourProblemForms.csproj", "{52CA3AD5-03E7-4A12-ADD5-EF54D14FACB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0770D023-8B57-44E9-BE20-BE46C354F506}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0770D023-8B57-44E9-BE20-BE46C354F506}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0770D023-8B57-44E9-BE20-BE46C354F506}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52CA3AD5-03E7-4A12-ADD5-EF54D14FACB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52CA3AD5-03E7-4A12-ADD5-EF54D14FACB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52CA3AD5-03E7-4A12-ADD5-EF54D14FACB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52CA3AD5-03E7-4A12-ADD5-EF54D14FACB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
