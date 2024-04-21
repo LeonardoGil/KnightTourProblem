@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using KnightTourProblemApplication;
 
 namespace KnightTourProblemConsole
 {

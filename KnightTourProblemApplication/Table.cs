@@ -1,8 +1,8 @@
-﻿using KnightTourProblemConsole.Enums;
+﻿using KnightTourProblemApplication.Enums;
 
-namespace KnightTourProblemConsole
+namespace KnightTourProblemApplication
 {
-    internal class Table
+    public class Table
     {
         public Knight Knight { get; private set; }
 

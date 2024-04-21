@@ -1,6 +1,6 @@
-﻿namespace KnightTourProblemConsole
+﻿namespace KnightTourProblemApplication
 {
-    internal class Knight(int x, int y)
+    public class Knight(int x, int y)
     {
         public int PositionX { get; private set; } = x;
         public int PositionY { get; private set; } = y;
@@ -19,7 +19,7 @@
                 MoveLeftUp(),
                 MoveLeftDown()
             };
-            
+
             // Movimentos dentro do tabuleiro
             return moves.Where(move => move.Item1 >= 0 && move.Item1 <= tableN - 1)
                         .Where(move => move.Item2 >= 0 && move.Item2 <= tableN - 1)
