@@ -46,8 +46,6 @@ namespace KnightTourProblemApplication
 
         private MoveResultEnum NextMove()
         {
-            Thread.Sleep(200);
-
             if (AllTraversedPositions())
                 return MoveResultEnum.Complete;
 
@@ -61,9 +59,6 @@ namespace KnightTourProblemApplication
             {
                 var move = possiblesMoves[i];
                 SetMove(move.x, move.y);
-                
-                SetCell?.Invoke(new CellDTO(Turn, move.x, move.y), EventArgs.Empty);
-
                 Turn++;
 
                 var result = NextMove();
@@ -71,9 +66,6 @@ namespace KnightTourProblemApplication
                 switch (result)
                 {
                     case MoveResultEnum.Fail:
-
-                        ClearCell?.Invoke(new CellDTO(Turn, move.x, move.y), EventArgs.Empty);
-
                         Turn--;
                         var lastMove = Historic[Turn - 1];
                         UnsetMove(lastMove.Value.x, lastMove.Value.y);
@@ -98,6 +90,8 @@ namespace KnightTourProblemApplication
             Knight.Set(x, y);
             Positions[x, y] = false;
             Historic[Turn - 1] = default;
+
+            ClearCell?.Invoke(new CellDTO(Turn, x, y), EventArgs.Empty);
         }
 
         private void SetMove(int x, int y)
@@ -105,6 +99,8 @@ namespace KnightTourProblemApplication
             Knight.Set(x, y);
             Positions[x, y] = true;
             Historic[Turn - 1] = (x, y);
+
+            SetCell?.Invoke(new CellDTO(Turn, x, y), EventArgs.Empty);
         }
 
         private void InitializeKnight()

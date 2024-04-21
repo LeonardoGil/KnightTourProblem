@@ -30,6 +30,7 @@
         {
             panelTable = new Panel();
             panelInfo = new Panel();
+            labelAttempts = new Label();
             numericUpDownLenght = new NumericUpDown();
             buttonStart = new Button();
             labelLenght = new Label();
@@ -49,6 +50,7 @@
             // panelInfo
             // 
             panelInfo.BackColor = SystemColors.ControlDark;
+            panelInfo.Controls.Add(labelAttempts);
             panelInfo.Controls.Add(numericUpDownLenght);
             panelInfo.Controls.Add(buttonStart);
             panelInfo.Controls.Add(labelLenght);
@@ -57,10 +59,21 @@
             panelInfo.Name = "panelInfo";
             panelInfo.Size = new Size(200, 600);
             panelInfo.TabIndex = 1;
+            panelInfo.MouseDown += Form_MouseDown;
+            panelInfo.MouseMove += Form_MouseMove;
+            // 
+            // labelAttempts
+            // 
+            labelAttempts.AutoSize = true;
+            labelAttempts.Location = new Point(15, 510);
+            labelAttempts.Name = "labelAttempts";
+            labelAttempts.Size = new Size(86, 19);
+            labelAttempts.TabIndex = 3;
+            labelAttempts.Text = "Tentativas: 0";
             // 
             // numericUpDownLenght
             // 
-            numericUpDownLenght.Location = new Point(122, 31);
+            numericUpDownLenght.Location = new Point(15, 31);
             numericUpDownLenght.Name = "numericUpDownLenght";
             numericUpDownLenght.Size = new Size(66, 25);
             numericUpDownLenght.TabIndex = 2;
@@ -80,7 +93,7 @@
             // labelLenght
             // 
             labelLenght.AutoSize = true;
-            labelLenght.Location = new Point(122, 9);
+            labelLenght.Location = new Point(15, 9);
             labelLenght.Name = "labelLenght";
             labelLenght.Size = new Size(66, 19);
             labelLenght.TabIndex = 0;
@@ -116,5 +129,6 @@
         private Button buttonStart;
         private NumericUpDown numericUpDownLenght;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private Label labelAttempts;
     }
 }

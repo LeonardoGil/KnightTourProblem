@@ -5,9 +5,15 @@ namespace KnightTourProblemForms
 {
     public partial class Main : Form
     {
+        private Point Point;
+
         private Table Table { get; set; }
 
         private Panel[,] Cells { get; set; }
+
+        private Panel LastCell { get; set; }
+
+        private int Attempts { get; set; }
 
         public Main()
         {
@@ -67,6 +73,10 @@ namespace KnightTourProblemForms
 
         private void table_SetCell(object sender, EventArgs e)
         {
+            Attempts++;
+
+            Thread.Sleep(100);
+
             if (sender is CellDTO dto)
             {
                 var cell = Cells[dto.X, dto.Y];
@@ -76,24 +86,66 @@ namespace KnightTourProblemForms
                     Text = dto.Turn.ToString(),
                     Dock = DockStyle.Fill,
                     TextAlign = ContentAlignment.MiddleCenter,
-                    ForeColor = cell.BackColor == Color.Black ? Color.White : Color.Black    
+                    ForeColor = cell.BackColor == Color.Black ? Color.White : Color.Black
                 };
 
-                Invoke(() => { cell.Controls.Add(label); });
+                Invoke(() =>
+                {
+                    AddKigntPicture(cell);
+                    cell.Controls.Add(label);
+                    labelAttempts.Text = $"Tentativas: {Attempts}";
+                });
             }
         }
 
         private void table_ClearCell(object sender, EventArgs e)
         {
+            Thread.Sleep(50);
+
             if (sender is CellDTO dto)
             {
                 Invoke(() => { Cells[dto.X, dto.Y].Controls.Clear(); });
             }
         }
 
+        private void AddKigntPicture(Panel panel)
+        {
+            if (LastCell is not null)
+            {
+                var picControl = LastCell.Controls.OfType<Control>().FirstOrDefault(x => x is PictureBox);
+
+                if (picControl is not null)
+                    LastCell.Controls.Remove(picControl);
+            }
+            LastCell = panel;
+
+            var picture = new PictureBox()
+            {
+                Image = Properties.Resources.Knight,
+                Dock = DockStyle.Fill,
+                SizeMode = PictureBoxSizeMode.StretchImage
+            };
+
+            panel.Controls.Add(picture);
+        }
+
         private void backgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             Table.Start();
+        }
+
+        private void Form_MouseDown(object sender, MouseEventArgs e)
+        {
+            Point = e.Location;
+        }
+
+        private void Form_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Left += e.X - Point.X;
+                Top += e.Y - Point.Y;
+            }
         }
     }
 }
