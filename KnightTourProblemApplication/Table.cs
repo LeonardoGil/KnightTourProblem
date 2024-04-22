@@ -5,7 +5,7 @@ namespace KnightTourProblemApplication
 {
     public class Table
     {
-        public Knight Knight { get; private set; }
+        public Knight _Knight { get; private set; }
 
         public int Turn { get; private set; } = 1;
 
@@ -18,7 +18,7 @@ namespace KnightTourProblemApplication
         public readonly bool[,] Positions;
 
         public event EventHandler SetCell;
-        
+
         public event EventHandler ClearCell;
 
         public Table(int n)
@@ -34,26 +34,52 @@ namespace KnightTourProblemApplication
             Result = NextMove();
         }
 
-        public bool AllTraversedPositions()
+        public CheckRemainingCellsResult CheckRemainingCells()
         {
+            var AllTraversedPositions = true;
+
             for (int x = 0; x < Positions.GetLength(0); x++)
                 for (int y = 0; y < Positions.GetLength(1); y++)
+                {
                     if (!Positions[x, y])
-                        return false;
+                    {
+                        AllTraversedPositions = false;
 
-            return true;
+                        if (Knight.GetMovements(n, x, y).Length == 0)
+                            return CheckRemainingCellsResult.LockedCell;
+                    }
+                }
+
+            return AllTraversedPositions ? CheckRemainingCellsResult.AllTraversedPositions : CheckRemainingCellsResult.none;
         }
+
+        public int NumberOfMovesForTheNextMove(int x, int y)
+        {
+            var moves = Knight.GetMovements(n, x, y);
+            moves = AvailableMoves(moves, x, y);
+
+            return moves.Length;
+        }
+
 
         private MoveResultEnum NextMove()
         {
-            if (AllTraversedPositions())
-                return MoveResultEnum.Complete;
+            switch (CheckRemainingCells())
+            {
+                case CheckRemainingCellsResult.AllTraversedPositions:
+                    return MoveResultEnum.Complete;
 
-            var knightMoves = Knight.GetMovements(n);
+                case CheckRemainingCellsResult.LockedCell:
+                    return MoveResultEnum.Fail;
+            }
+
+            var knightMoves = _Knight.GetMovements(n);
             var possiblesMoves = AvailableMoves(knightMoves);
 
             if (!possiblesMoves.Any())
                 return MoveResultEnum.Fail;
+
+            possiblesMoves = [.. possiblesMoves.OrderBy(move => NumberOfMovesForTheNextMove(move.x, move.y))];
 
             for (int i = 0; i < possiblesMoves.Length; i++)
             {
@@ -85,9 +111,14 @@ namespace KnightTourProblemApplication
             return moves.Where(move => !Positions[move.x, move.y]).ToArray();
         }
 
+        private (int x, int y)[] AvailableMoves((int x, int y)[] moves, int nextMoveX, int nextMoveY)
+        {
+            return moves.Where(move => !Positions[move.x, move.y] || (!(nextMoveX == move.x && nextMoveY == move.y))).ToArray();
+        }
+
         private void UnsetMove(int x, int y)
         {
-            Knight.Set(x, y);
+            _Knight.Set(x, y);
             Positions[x, y] = false;
             Historic[Turn - 1] = default;
 
@@ -96,7 +127,7 @@ namespace KnightTourProblemApplication
 
         private void SetMove(int x, int y)
         {
-            Knight.Set(x, y);
+            _Knight.Set(x, y);
             Positions[x, y] = true;
             Historic[Turn - 1] = (x, y);
 
@@ -113,9 +144,17 @@ namespace KnightTourProblemApplication
 
             //Knight = new Knight(knightX, knightY);
 
-            Knight = new Knight(0, 0);
+            _Knight = new Knight(0, 0);
             SetMove(0, 0);
         }
 
+    }
+    public enum CheckRemainingCellsResult
+    {
+        none = 0,
+
+        AllTraversedPositions = 1,
+
+        LockedCell = 2
     }
 }
