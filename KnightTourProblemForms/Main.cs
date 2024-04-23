@@ -15,6 +15,8 @@ namespace KnightTourProblemForms
 
         private int Attempts { get; set; }
 
+        private int Delay = 0;
+
         public Main()
         {
             InitializeComponent();
@@ -44,7 +46,9 @@ namespace KnightTourProblemForms
                         Location = location
                     };
 
-                    panelTable.Controls.Add(panel);
+
+
+                    backgroundWorker?.ReportProgress(0, panel);
                     Cells[x, y] = panel;
                 }
             }
@@ -75,7 +79,7 @@ namespace KnightTourProblemForms
         {
             Attempts++;
 
-            Thread.Sleep(100);
+            Thread.Sleep(Delay);
 
             if (sender is CellDTO dto)
             {
@@ -89,18 +93,15 @@ namespace KnightTourProblemForms
                     ForeColor = cell.BackColor == Color.Black ? Color.White : Color.Black
                 };
 
-                Invoke(() =>
-                {
-                    AddKigntPicture(cell);
-                    cell.Controls.Add(label);
-                    labelAttempts.Text = $"Tentativas: {Attempts}";
-                });
+                AddKigntPicture(cell);
+                cell.Controls.Add(label);
+                labelAttempts.Text = $"Tentativas: {Attempts}";
             }
         }
 
         private void table_ClearCell(object sender, EventArgs e)
         {
-            Thread.Sleep(50);
+            Thread.Sleep(Delay);
 
             if (sender is CellDTO dto)
             {
@@ -146,6 +147,12 @@ namespace KnightTourProblemForms
                 Left += e.X - Point.X;
                 Top += e.Y - Point.Y;
             }
+        }
+
+        private void backgroundWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            if (sender is Panel panel)
+                panelTable.Controls.Add(panel);
         }
     }
 }
