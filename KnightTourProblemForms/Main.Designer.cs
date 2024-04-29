@@ -102,7 +102,6 @@
             // backgroundWorker
             // 
             backgroundWorker.DoWork += backgroundWorker_DoWork;
-            backgroundWorker.ProgressChanged += backgroundWorker_ProgressChanged;
             // 
             // Main
             // 
